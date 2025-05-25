@@ -1,0 +1,23 @@
+services:
+  yarr:
+    build:
+      context: .
+      dockerfile: etc/dockerfile
+    ports:
+      - "7070:7070"
+    volumes:
+      - ~/.config/yarr/data:/data
+    restart: unless-stopped
+
+  yarr-arm:
+    build:
+      context: .
+      dockerfile: etc/dockerfile.arm
+    ports:
+      - "7070:7070" # Different port to avoid conflict
+    volumes:
+      - ~/.config/yarr/data:/data
+    restart: unless-stopped
+
+volumes:
+  data:
