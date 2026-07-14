@@ -28,6 +28,13 @@ RUN mkdir /out && \
 
 FROM debian:bookworm-slim AS final
 
-COPY --from=builder /out/ /root/out/
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    update-ca-certificates
 
-CMD ["/bin/bash"]
+COPY --from=builder /out/yarr.arm64 /usr/local/bin/yarr
+
+EXPOSE 7070
+ENTRYPOINT ["/usr/local/bin/yarr"]
+CMD ["-addr", "0.0.0.0:7070", "-db", "/data/yarr.db"]
